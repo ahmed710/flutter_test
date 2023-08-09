@@ -5,14 +5,16 @@ import 'package:file_picker/file_picker.dart';
 import 'package:habhoub/CircularProgressIndicator.dart';
 
 class StepWidgetThird extends StatefulWidget {
+  final int lastStepNumber ;
   final int stepNumber;
   final int totalSteps;
-  final AnimationController animationController;
+  final bool isSwipedRight;
 
   StepWidgetThird({
+    required this.lastStepNumber,
     required this.stepNumber,
     required this.totalSteps,
-    required this.animationController,
+    required this.isSwipedRight,
   });
 
   @override
@@ -52,15 +54,16 @@ class _StepWidgetThirdState extends State<StepWidgetThird> {
                     Padding(
                       padding: const EdgeInsets.all(0.0),
                       child: CustomProgressIndicator(
-                        animationController: widget.animationController, // Pass the animationController here
-                        stepNumber: widget.stepNumber, // Pass the stepNumber here
-                        totalSteps: widget.totalSteps, // Pass the totalSteps here
+                        lastStepNumber: widget.lastStepNumber,
+                        stepNumber: widget.stepNumber,
+                        totalSteps: widget.totalSteps,
+                        isSwipedRight :widget.isSwipedRight,
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20,0,30,0),
                       child: Text(
-                        'Third Step',
+                        'La troisième étape',
                         style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,

@@ -2,24 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:habhoub/CircularProgressIndicator.dart';
 import 'package:habhoub/Stepper.dart';
 class StepWidgetFirst extends StatefulWidget {
+  final int lastStepNumber ;
   final int stepNumber;
   final int totalSteps;
-  final AnimationController animationController;
   final ButtonController handleProfessionelButtonTap;
   final ButtonController insuranceTypeButtonController;
+  final bool isSwipedRight;
 
   StepWidgetFirst({
+    required this.lastStepNumber,
     required this.stepNumber,
     required this.totalSteps,
-    required this.animationController,
     required this.handleProfessionelButtonTap,
     required this.insuranceTypeButtonController,
+    required this.isSwipedRight,
   });
 
   @override
   _StepWidgetFirstState createState() => _StepWidgetFirstState();
-}
-
+  }
 
 class _StepWidgetFirstState extends State<StepWidgetFirst> {
   void handleProfessionelButtonTap(int index) {
@@ -55,15 +56,16 @@ class _StepWidgetFirstState extends State<StepWidgetFirst> {
               Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: CustomProgressIndicator(
-                  animationController: widget.animationController,
+                  lastStepNumber: widget.lastStepNumber,
                   stepNumber: widget.stepNumber,
                   totalSteps: widget.totalSteps,
+                  isSwipedRight: widget.isSwipedRight,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 30, 0),
                 child: Text(
-                  'First Step',
+                  'La Première étape',
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
@@ -93,7 +95,6 @@ class _StepWidgetFirstState extends State<StepWidgetFirst> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               MyButton(
-                animationController: widget.animationController,
                 stepNumber: widget.stepNumber,
                 totalSteps: widget.totalSteps,
                 buttonText: 'Professionel',
@@ -104,7 +105,6 @@ class _StepWidgetFirstState extends State<StepWidgetFirst> {
               ),
               SizedBox(width: 50),
               MyButton(
-                animationController: widget.animationController,
                 stepNumber: widget.stepNumber,
                 totalSteps: widget.totalSteps,
                 buttonText: 'Particulier',
@@ -136,7 +136,6 @@ class _StepWidgetFirstState extends State<StepWidgetFirst> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               MyButton(
-                animationController: widget.animationController,
                 stepNumber: widget.stepNumber,
                 totalSteps: widget.totalSteps,
                 buttonText: 'Auto',
@@ -147,7 +146,6 @@ class _StepWidgetFirstState extends State<StepWidgetFirst> {
               ),
               SizedBox(height: 40),
               MyButton(
-                animationController: widget.animationController,
                 stepNumber: widget.stepNumber,
                 totalSteps: widget.totalSteps,
                 buttonText: 'Habitation',
@@ -158,7 +156,6 @@ class _StepWidgetFirstState extends State<StepWidgetFirst> {
               ),
               SizedBox(height: 40),
               MyButton(
-                animationController: widget.animationController,
                 stepNumber: widget.stepNumber,
                 totalSteps: widget.totalSteps,
                 buttonText: 'Moto / Scooter',
@@ -169,7 +166,6 @@ class _StepWidgetFirstState extends State<StepWidgetFirst> {
               ),
               SizedBox(height: 40),
               MyButton(
-                animationController: widget.animationController,
                 stepNumber: widget.stepNumber,
                 totalSteps: widget.totalSteps,
                 buttonText: 'Santé',

@@ -3,24 +3,39 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:habhoub/CircularProgressIndicator.dart';
 
+
 class StepWidgetSecond extends StatefulWidget{
   GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
-
+  final int lastStepNumber ;
   final int stepNumber;
   final int totalSteps;
-  final AnimationController animationController;
+  final bool isSwipedRight;
+  final Function(bool) goToNextStep;
 
   StepWidgetSecond({
+    required this.lastStepNumber,
     required this.stepNumber,
     required this.totalSteps,
-    required this.animationController,
+    required this.isSwipedRight,
+    required this.goToNextStep,
   });
+
   @override
   _StepWidgetSecondState createState() => _StepWidgetSecondState();
 }
 class _StepWidgetSecondState extends State<StepWidgetSecond> {
+  bool areFormFieldsValid = false;
+  bool buttonClicked = false;
+
+  void _updateButtonValidity() {
+    setState(() {
+      areFormFieldsValid = widget._formKey.currentState?.saveAndValidate() ?? false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    Color textColor = buttonClicked ? Colors.blue : Color(0xFF00082B);
     return Padding(
       padding: const EdgeInsets.all(0.0),
       child: SingleChildScrollView(
@@ -35,15 +50,16 @@ class _StepWidgetSecondState extends State<StepWidgetSecond> {
                     Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: CustomProgressIndicator(
-                        animationController: widget.animationController, // Pass the animationController here
-                        stepNumber: widget.stepNumber, // Pass the stepNumber here
+                        lastStepNumber: widget.lastStepNumber,
+                        stepNumber: widget.stepNumber,
                         totalSteps: widget.totalSteps,
+                        isSwipedRight :widget.isSwipedRight,
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20,0,30,0),
                       child: Text(
-                        'Second Step',
+                        'La Deuxième étape',
                         style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
@@ -54,13 +70,13 @@ class _StepWidgetSecondState extends State<StepWidgetSecond> {
                 ),
                 SizedBox(height: 15),
                 Padding(
-                  padding: const EdgeInsets.only(left: 25.0),
+                  padding: const EdgeInsets.only(left: 20.0),
                   child: Row(
                     children: [
                       Text(
                         'Informations Client',
                         style: TextStyle(
-                            fontSize: 17,
+                            fontSize: 18,
                             fontWeight: FontWeight.w500,
                             color: Color(0xFF4B4B4B)),
                       ),
@@ -168,7 +184,7 @@ class _StepWidgetSecondState extends State<StepWidgetSecond> {
                               text: TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: '* ', // Add the asterisk here
+                                    text: '* ',
                                     style: TextStyle(
                                       fontSize: 15,
                                       color: Color(0xFFFF4200),
@@ -193,8 +209,8 @@ class _StepWidgetSecondState extends State<StepWidgetSecond> {
                       SizedBox(
                         height: 30,
                         child: FormBuilderTextField(
-                          key: ValueKey('email'),
-                          name: 'email',
+                          key: ValueKey('confirmation'),
+                          name: 'confirmation',
                           keyboardType: TextInputType.emailAddress,
                           validator: FormBuilderValidators.compose([
                             FormBuilderValidators.required(),
@@ -253,7 +269,7 @@ class _StepWidgetSecondState extends State<StepWidgetSecond> {
                               text: TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: '* ', // Add the asterisk here
+                                    text: '* ',
                                     style: TextStyle(
                                       fontSize: 15,
                                       color: Color(0xFFFF4200),
@@ -278,12 +294,11 @@ class _StepWidgetSecondState extends State<StepWidgetSecond> {
                       SizedBox(
                         height: 30,
                         child: FormBuilderTextField(
-                          key: ValueKey('email'),
-                          name: 'email',
+                          key: ValueKey('adresse'),
+                          name: 'Adresse',
                           keyboardType: TextInputType.emailAddress,
                           validator: FormBuilderValidators.compose([
                             FormBuilderValidators.required(),
-                            FormBuilderValidators.email(),
                           ]),
                         ),
                       ),
@@ -291,33 +306,40 @@ class _StepWidgetSecondState extends State<StepWidgetSecond> {
                         height: 50,
                       ),
                       ElevatedButton(
-                        onPressed: () {
+                        onPressed: areFormFieldsValid
+                            ? () {
                           if (widget._formKey.currentState?.saveAndValidate() ?? false) {
-                            Map<String, dynamic> formData =
-                                widget._formKey.currentState!.value;
+                            Map<String, dynamic> formData = widget._formKey.currentState!.value;
+                            String nom = formData['nom'];
                             String email = formData['email'];
+                            String confirmation = formData['confirmation'];
                             String telephone = formData['telephone'];
+                            String adresse = formData['adresse'];
+                            widget.goToNextStep(true);
+                            print('piw');
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  content: Text(
-                                      'Veuillez corriger les erreurs dans le formulaire.')),
+                              SnackBar(content: Text('Veuillez corriger les erreurs dans le formulaire.')),
                             );
                           }
-                        },
+                        } : null,
                         style: ElevatedButton.styleFrom(
-                          primary: Color(0xFF00082B),
+                          elevation: 0,
+                          primary: Color(0xFFFFFFFF),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(11),
                           ),
+
                         ),
                         child: Text(
-                          "S'INSCRIRE",
+                          "Suivant",
                           style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.white,
+                              fontSize: 15,
+                              color: areFormFieldsValid ? Color(0xFF00082B): Colors.grey,
                               fontFamily: 'Segoe',
-                              fontWeight: FontWeight.w600),
+                              fontWeight: FontWeight.w600,
+                              decoration: TextDecoration.underline,
+                          ),
                         ),
                       ),
                     ],

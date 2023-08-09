@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:habhoub/StepWidgetFirst.dart';
 import 'package:habhoub/StepWidgetSecond.dart';
@@ -16,7 +17,6 @@ class ButtonController {
 }
 
 class MyButton extends StatefulWidget {
-  final AnimationController animationController;
   final int stepNumber;
   final int totalSteps;
   final String buttonText;
@@ -26,7 +26,6 @@ class MyButton extends StatefulWidget {
   final VoidCallback onTap;
 
   MyButton({
-    required this.animationController,
     required this.stepNumber,
     required this.totalSteps,
     required this.buttonText,
@@ -113,21 +112,33 @@ class StepNavigationWidget extends StatelessWidget {
 }
 
 class StepperPage extends StatefulWidget {
+
   const StepperPage({Key? key}) : super(key: key);
 
   @override
   _StepperPageState createState() => _StepperPageState();
 }
 
-class _StepperPageState extends State<StepperPage>
-    with SingleTickerProviderStateMixin {
+class _StepperPageState extends State<StepperPage> with SingleTickerProviderStateMixin {
+  void goToNextStep(bool shouldSwipe) {
+    print(shouldSwipe);
+    if (shouldSwipe) {
+      print(_currentPageIndex);
+      int nextPageIndex = _currentPageIndex + 1;
+        _pageController.animateToPage(3 , duration: Duration(milliseconds: 500), curve: Curves.ease);
+    }
+  }
   late PageController _pageController;
   late AnimationController _animationController;
-  double _initialValue=1/3;
-  int _currentPageIndex = 0;
+  int index =0;
+  double _initialValue=0;
+  int _previousPageIndex = 0;
+  int _currentPageIndex = 1;
+  bool isSwipedRight = true ;
   final int _totalSteps = 3;
   final ButtonController handleProfessionelButtonTap = ButtonController();
   final ButtonController insuranceTypeButtonController = ButtonController();
+  bool alternate = true;
 
   @override
   void initState() {
@@ -149,16 +160,10 @@ class _StepperPageState extends State<StepperPage>
 
   void _handlePageChange(int i, {bool userSwipe = false}) {
     setState(() {
-      print(userSwipe);
       if (userSwipe) {
         if (i > _currentPageIndex) {
           _animationController.animateTo((i / _totalSteps)+_initialValue,
               duration: Duration(seconds: 4), curve: Curves.easeOut);
-          print(i);
-          print(_totalSteps);
-          print(_initialValue);
-          print(_currentPageIndex);
-          print((i / _totalSteps)+_initialValue);
         } else if (i < _currentPageIndex) {
           _animationController.animateTo((i) / _totalSteps,
               duration: Duration(seconds: 4), curve: Curves.easeOut);
@@ -167,39 +172,49 @@ class _StepperPageState extends State<StepperPage>
       _currentPageIndex = i;
     });
   }
+  void _detectSwipeDirection(int newIndex) {
+    if (newIndex >= _currentPageIndex) {
+      isSwipedRight=true ;
+    } else if (newIndex < _currentPageIndex) {
+      isSwipedRight=false ;
+    }
+    _previousPageIndex = _currentPageIndex;
+    _currentPageIndex = newIndex;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('emchi imin ya 7aj '),
-        backgroundColor: Color(0xFF00082B),
-      ),
       body: Stack(
         children: [
           PageView(
-
             controller: _pageController,
-            onPageChanged: (index) {
+          onPageChanged: (index) {
+            _detectSwipeDirection(index);
               _handlePageChange(index, userSwipe: true);
+              this.index = index;
             },
             children: [
               StepWidgetFirst(
+                isSwipedRight: isSwipedRight ,
+                lastStepNumber:_currentPageIndex,
                 stepNumber: 1,
                 totalSteps: 3,
-                animationController: _animationController,
                 handleProfessionelButtonTap: handleProfessionelButtonTap,
                 insuranceTypeButtonController: insuranceTypeButtonController,
               ),
               StepWidgetSecond(
+                isSwipedRight: isSwipedRight,
+                lastStepNumber:_currentPageIndex,
                 stepNumber: 2,
                 totalSteps: 3,
-                animationController: _animationController,
+                goToNextStep: goToNextStep,
               ),
               StepWidgetThird(
+                isSwipedRight: isSwipedRight ,
+                lastStepNumber:_currentPageIndex,
                 stepNumber: 3,
                 totalSteps: 3,
-                animationController: _animationController,
               ),
             ],
           ),
