@@ -1,0 +1,50 @@
+name: aibspartenairemobile
+description: A new Flutter project.
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.6 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.2
+  flutter_svg: ^2.0.7
+  flutter_form_builder: ^9.1.0
+  form_builder_validators: ^9.0.0
+  mobx: ^2.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+  flutter_lints: ^2.0.0
+  test: ^1.24.1
+
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/logo_1_whites.svg
+    - assets/logo_2_whites.svg
+    - assets/logo_3_whites.svg
+    - assets/logo_0_whites.svg
+    - assets/logo_aibs.svg
+    - assets/go_login.svg
+    - assets/facebook_icon.svg
+    - assets/twitter_icon.svg
+    - assets/google_icon.svg
+
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/rocgrotesk.ttf
+    - family: Segoe
+      fonts:
+        - asset: assets/fonts/segoe.ttf
+
+
